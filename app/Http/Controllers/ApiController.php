@@ -14,6 +14,35 @@ use Illuminate\Support\Str;
 
 class ApiController extends Controller
 {
+    public function index()
+    {
+        return response()->json([
+            'status' => true,
+            'message' => "Welcome to product api",
+            'created by' => "Fangki Igo Pramana",
+            'url' => [
+                'All access' => [
+                    'GET all products' => '/api/products',
+                    'GET all categories' => '/api/categories',
+                    'GET one products' => '/api/products/{id}',
+                    'POST register' => '/register',
+                    'POST login' => '/login',
+
+                ],
+                'Login required' => [
+                    'POST Product' => '/products',
+                    'PATCH Product' => '/products/{id}',
+                    'DELETE Product' => '/products/{id}',
+                    'POST asset' => '/products/{product_id}/assets',
+                    'DELETE asset' => '/products/{product_id}/assets/{asset_id}'
+                ]
+            ],
+            'media' => [
+                'github' => 'https://github.com/fangkiigopramana',
+                'repository' => 'https://github.com/fangkiigopramana/product-api' 
+            ]
+        ]);
+    }
     // Get all product data
     public function products()
     {
@@ -31,7 +60,7 @@ class ApiController extends Controller
         $product = Product::with('assets')->find($id);
 
         // if product id not found
-        if (!$product){
+        if (!$product) {
             return response()->json([
                 'status' => false,
                 'message' => 'Product not found.',
@@ -104,7 +133,7 @@ class ApiController extends Controller
             $asset = new ProductAsset([
                 'product_id' => $product->id,
                 'image' => $path,
-            ]);    
+            ]);
             $product->assets()->save($asset);
         }
 
@@ -113,7 +142,6 @@ class ApiController extends Controller
             'message' => 'Product successfully created.',
             'data' => new ProductResource($product->load('assets')),
         ], 201);
-        
     }
 
     public function updateProduct(Request $request, $id)
@@ -205,7 +233,7 @@ class ApiController extends Controller
             'images.*' => 'image|mimes:jpeg,png,jpg,gif|max:2048',
         ]);
 
-        
+
         // if failed
         if ($validator->fails()) {
             return response()->json([
@@ -247,7 +275,7 @@ class ApiController extends Controller
 
         // Delete asset
         $asset->delete();
-        
+
         return response()->json([
             'status' => true,
             'message' => 'Asset have been deleted.',

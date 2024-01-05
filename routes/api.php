@@ -21,22 +21,23 @@ Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
 });
 
 Route::controller(AuthController::class)->group(function () {
-    Route::post('/register','register');
-    Route::post('/login','auth');
-    Route::get('/login','login')->name('login');
+    Route::post('/register', 'register');
+    Route::post('/login', 'auth');
+    Route::get('/login', 'login')->name('login');
 });
 
 Route::controller(ApiController::class)->group(function () {
-    Route::get('/categories','categories');
-    Route::get('/products','products');
-    Route::get('/products/{id}','oneProduct');
-    
+    Route::get('/', 'index');
+    Route::get('/categories', 'categories');
+    Route::get('/products', 'products');
+    Route::get('/products/{id}', 'oneProduct');
+
     Route::middleware(['auth:sanctum'])->group(function () {
-        Route::post('/products','storeProduct');
-        Route::patch('/products/{id}','updateProduct');
-        Route::delete('/products/{id}','destroyProduct');
-        
-        Route::post('/products/{product_id}/assets','storeAsset');
-        Route::delete('/products/{product_id}/assets/{asset_id}','destroyAsset');
+        Route::post('/products', 'storeProduct');
+        Route::patch('/products/{id}', 'updateProduct');
+        Route::delete('/products/{id}', 'destroyProduct');
+
+        Route::post('/products/{product_id}/assets', 'storeAsset');
+        Route::delete('/products/{product_id}/assets/{asset_id}', 'destroyAsset');
     });
 });

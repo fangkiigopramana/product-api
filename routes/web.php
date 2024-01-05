@@ -1,5 +1,8 @@
 <?php
 
+use App\Models\Category;
+use App\Models\Product;
+use Illuminate\Support\Facades\Http;
 use Illuminate\Support\Facades\Route;
 
 /*
@@ -14,5 +17,12 @@ use Illuminate\Support\Facades\Route;
 */
 
 Route::get('/', function () {
-    return view('welcome');
+    return view('index',[
+        'categories' => Category::withCount('products')->orderByDesc('products_count')->get(),
+        'products' => Product::with('assets')->orderBy('price', 'desc')->get()
+    ]);
+});
+
+Route::fallback(function () {
+    return redirect('/');
 });
